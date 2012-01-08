@@ -52,8 +52,15 @@ $.fn.extend($.ui.dialog.prototype, {
             }
         } else {
             // If contents changed reposition instantly - handy for dialog position reset (critical for dialog flow)
-            dlg.css('top', top + 'px');
-            dlg.css('left', left + 'px');
+
+            // If dialog height is greater than viewport height then top = 0
+            if(dlg.height() > $(window).height()) top = 0;
+
+            // If dialog width is greater than viewport width the left = 0
+            if(dlg.width() > $(window).width()) left = 0;
+
+            // Apply computed left/top
+            dlg.css({'top': top + 'px', 'left': left + 'px'});
         }
     },
 
