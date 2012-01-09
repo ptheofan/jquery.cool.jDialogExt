@@ -20,12 +20,20 @@ $.fn.extend($.ui.dialog.prototype, {
     
     _init: function() {
         this._parentInit();
-        this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
-        $(window).scroll($(this.uiDialog), this.repositionDlg);
-        $(window).resize($(this.uiDialog), this.repositionDlg);
+        this.element.bind('DOMSubtreeModified', $(this.uiDialog), this._repositionDlg);
+        $(window).scroll($(this.uiDialog), this._repositionDlg);
+        $(window).resize($(this.uiDialog), this._repositionDlg);
     },
     
-    repositionDlg: function(evt) {
+    
+    /**
+     * Adjust the dialogs position
+     * This is the function we register with DOMSubtreeModified, window.scroll
+     * and window.resize.
+     * 
+     * This function is not meant to be used from the outside
+     */
+    _repositionDlg: function(evt) {
         // Get a reference to the dialog div (ui-dialog)
         var dlg = evt.data;
 
@@ -52,13 +60,13 @@ $.fn.extend($.ui.dialog.prototype, {
             }
         } else {
             // If contents changed reposition instantly - handy for dialog position reset (critical for dialog flow)
-
+            
             // If dialog height is greater than viewport height then top = 0
             if(dlg.height() > $(window).height()) top = 0;
-
+            
             // If dialog width is greater than viewport width the left = 0
             if(dlg.width() > $(window).width()) left = 0;
-
+            
             // Apply computed left/top
             dlg.css({'top': top + 'px', 'left': left + 'px'});
         }
@@ -71,7 +79,28 @@ $.fn.extend($.ui.dialog.prototype, {
      *  $(htmlEntityUsedtoCreateThedialog).dialog('setContent', htmlOrJQueryObject)
      */
     setContent: function(content) {
+        // Replace current content (dialog.element.html) with new content
         $(this.element).html(content);
+        
+        // Update the dialog title -- if applicable
+        var title = $(content).attr('title');
+        if (typeof title !== 'undefined' && title !== false)
+            this.uiDialogTitlebar.children('.ui-dialog-title').html(title);
+        
+        
+        // Unfortunatelly _setSize nor dialog('resize') will properly set
+        // min-width. Thus we do it manually. A little TODO here is that
+        // in jDialog minWidth/minHeight specify outter size (uiDialog).
+        // Apply correction to set minWidth/minHeight of dialog.element
+        // to the remaining size so outter size is correct. At the moment
+        // we set content to minWidth/minHeight
+        var w = $(content).width();
+        var h = $(content).height();
+        
+        if(w < this.options.minWidth) w = this.options.minWidth;
+        if(h < this.options.minHeight) h = this.options.minHeight;
+        
+        this.element.css({'min-width': w+'px', 'min-height': h+'px'});
     },
 
 
@@ -83,6 +112,9 @@ $.fn.extend($.ui.dialog.prototype, {
      * Info:
      * Will create two divs absolutely positioned over the
      * contents of the dialog and over the current contents.
+     * 
+     * Ideally you could also use block (ui plugin) but
+     * let's not add dependencies - overlay is simple enough
      */
     loading: function(options) {
         var l = $(this.element).css('padding-left');
