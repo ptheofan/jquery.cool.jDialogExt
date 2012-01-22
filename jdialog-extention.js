@@ -119,29 +119,32 @@ $.fn.extend($.ui.dialog.prototype, {
 
 
     /**
-   * Place a loading overlay over the dialog
-   * options.overlayClass
-   * options.spinnerClass
-   *
-   * Info:
-   * Will create two divs absolutely positioned over the
-   * contents of the dialog.
-   */
-    loading: function() {
+     * Place a loading overlay over the dialog
+     * opts: {
+     *  spinnerClass: 'ui-dialog-spinner',
+     *  title: 'Loading...'
+     * }
+     *
+     * Info:
+     * Will create two divs absolutely positioned over the
+     * contents of the dialog.
+     */
+    loading: function(opts) {
         var l = $(this.element).css('padding-left');
         var t = $(this.element).css('padding-top');
-        var w = $(this.element).width();
-        var h = $(this.element).height();
+        var w = $(this.element).innerWidth();
+        var h = $(this.element).innerHeight();
+        
+        if(w < this.options.minWidth) w = this.options.minWidth;
+        if(w < this.options.width) w = this.options.width;
+        if(h < this.options.minWidth) h = this.options.minHeight;
+        if(h < this.options.width) h = this.options.height;
 
-        //        if(this.options.overlayOnAjax) {
-        //            var overlay = $("<div class='ui-dialog-overlay' style='display: block; position: absolute; width: "+w+"px; height: "+h+"px; left: "+l+"; top: "+t+"; z-index: 1002'></div>");
-        //            overlay.addClass(opts.overlayClass);
-        //            this.element.append(overlay);
-        //        }
+        opts = $.extend({}, {title: 'Loading', spinnerClass: 'ui-dialog-spinner'}, opts);
+
         if (this.options.spinnerOnAjax) {
-            var spinner = $("<div class='ui-dialog-spinner' style='display: block; position: absolute; width: " + w + "px; height: " + h + "px; left: " + l + "; top: " + t + "; z-index: 1003'></div>");
-            spinner.addClass(this.uiDialogExtClasses.spinner);
-            this.element.append(spinner);
+            var spinner = $("<div title='Loading...'><div class='" + opts.spinnerClass + "' style='min-width: " + w + "px; min-height: " + h + "px;'></div></div>");
+            $(this.element).dialog('content', spinner);
         }
     },
 
