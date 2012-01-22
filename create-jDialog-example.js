@@ -17,5 +17,5 @@ $("<div></div>").dialog({
     width: 'auto',
     height: 'auto',
     create: function(event, ui) {  $(this).dialog('setContent', $("#c1").clone()); },
-    close: function(event, ui) { $(this).dialog('widget').destroy(); }
+    close: function(event, ui) { $(this).dialog('widget').remove(); }
 });
