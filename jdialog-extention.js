@@ -9,7 +9,7 @@
  *
  * 3. Display a loading spinner easily
  * $(selector).dialog('loading');
- * 
+ *
  * 4. Populate the dialog via ajax easily
  * $(selector).dialog('ajax', ajaxArgs);
  *
@@ -31,9 +31,8 @@ $.fn.extend($.ui.dialog.prototype, {
         this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
         $(window).scroll($(this.uiDialog), this.repositionDlg);
         $(window).resize($(this.uiDialog), this.repositionDlg);
-        
-        if(typeof(this.options.spinnerOnAjax) == 'undefined')
-            this.options.spinnerOnAjax = true;
+
+        if (typeof(this.options.spinnerOnAjax) == 'undefined') this.options.spinnerOnAjax = true;
     },
 
     repositionDlg: function(evt) {
@@ -45,17 +44,17 @@ $.fn.extend($.ui.dialog.prototype, {
         var left = (($(window).width() - dlg.width()) / 2) + $(window).scrollLeft();
 
         // Ensure our dialog never gets out of user viewport
-        if(top < 0) top = 0;
-        if(left < 0) left = 0;
+        if (top < 0) top = 0;
+        if (left < 0) left = 0;
 
         // Terminate any dialog related animation
         $(dlg).clearQueue();
 
         // Reposition the dialog
-        if(evt.originalEvent.type === 'scroll' || evt.originalEvent.type === 'resize') {
+        if (evt.originalEvent.type === 'scroll' || evt.originalEvent.type === 'resize') {
             // Animate ONLY if dialog is smaller than the viewport - otherwise user needs to scroll to have access
             // over the entire dialog ;)
-            if(dlg.width() < $(window).width() && dlg.height() < $(window).height()) {
+            if (dlg.width() < $(window).width() && dlg.height() < $(window).height()) {
                 $(dlg).animate({
                     'top': top,
                     'left': left
@@ -63,32 +62,33 @@ $.fn.extend($.ui.dialog.prototype, {
             }
         } else {
             // If contents changed reposition instantly - handy for dialog position reset (critical for dialog flow)
-
             // If dialog height is greater than viewport height then top = 0
-            if(dlg.height() > $(window).height()) top = 0;
+            if (dlg.height() > $(window).height()) top = 0;
 
             // If dialog width is greater than viewport width the left = 0
-            if(dlg.width() > $(window).width()) left = 0;
+            if (dlg.width() > $(window).width()) left = 0;
 
             // Apply computed left/top
-            dlg.css({'top': top + 'px', 'left': left + 'px'});
+            dlg.css({
+                'top': top + 'px',
+                'left': left + 'px'
+            });
         }
     },
 
 
     /**
-     * Modify the contents of jDialog post initialization
-     * how to:
-     *  $(htmlEntityUsedtoCreateThedialog).dialog('content', htmlOrJQueryObject)
-     */
+   * Modify the contents of jDialog post initialization
+   * how to:
+   *  $(htmlEntityUsedtoCreateThedialog).dialog('content', htmlOrJQueryObject)
+   */
     content: function(content) {
         // Replace current content (dialog.element.html) with new content
         $(this.element).html(content);
 
         // Update the dialog title -- if applicable
         var title = $(content).attr('title');
-        if (typeof title !== 'undefined' && title !== false)
-            this.uiDialogTitlebar.children('.ui-dialog-title').html(title);
+        if (typeof title !== 'undefined' && title !== false) this.uiDialogTitlebar.children('.ui-dialog-title').html(title);
 
 
         // Unfortunatelly _setSize nor dialog('resize') will properly set
@@ -100,71 +100,92 @@ $.fn.extend($.ui.dialog.prototype, {
         var w = $(content).innerWidth();
         var h = $(content).innerHeight();
 
-        //if(w < this.options.minWidth) w = this.options.minWidth - $(this.element).css('padding');
-        //if(h < this.options.minHeight) h = this.options.minHeight;
-
-        $(this.element).css({'min-width': w+'px', 'min-height': h+'px'});
+        if(w < this.options.minWidth) w = this.options.minWidth - $(this.element).css('padding');
+        if(h < this.options.minHeight) h = this.options.minHeight;
+        $(this.element).css({
+            'min-width': w + 'px',
+            'min-height': h + 'px'
+        });
     },
 
     /**
-     * Modify the title of the jDialog post initialization
-     * how to:
-     *  $(htmlEntityUsedtoCreateThedialog).dialog('title', htmlOrJQueryObject)
-     */
+   * Modify the title of the jDialog post initialization
+   * how to:
+   *  $(htmlEntityUsedtoCreateThedialog).dialog('title', htmlOrJQueryObject)
+   */
     title: function(title) {
         $(this.uiDialogTitlebar).children('.ui-dialog-title').html(title);
     },
 
 
     /**
-     * Place a loading overlay over the dialog
-     * options.overlayClass
-     * options.spinnerClass
-     *
-     * Info:
-     * Will create two divs absolutely positioned over the
-     * contents of the dialog.
-     */
+   * Place a loading overlay over the dialog
+   * options.overlayClass
+   * options.spinnerClass
+   *
+   * Info:
+   * Will create two divs absolutely positioned over the
+   * contents of the dialog.
+   */
     loading: function() {
         var l = $(this.element).css('padding-left');
         var t = $(this.element).css('padding-top');
         var w = $(this.element).width();
         var h = $(this.element).height();
 
-//        if(this.options.overlayOnAjax) {
-//            var overlay = $("<div class='ui-dialog-overlay' style='display: block; position: absolute; width: "+w+"px; height: "+h+"px; left: "+l+"; top: "+t+"; z-index: 1002'></div>");
-//            overlay.addClass(opts.overlayClass);
-//            this.element.append(overlay);
-//        }
-
-        if(this.options.spinnerOnAjax) {
-            var spinner = $("<div class='ui-dialog-spinner' style='display: block; position: absolute; width: "+w+"px; height: "+h+"px; left: "+l+"; top: "+t+"; z-index: 1003'></div>");
+        //        if(this.options.overlayOnAjax) {
+        //            var overlay = $("<div class='ui-dialog-overlay' style='display: block; position: absolute; width: "+w+"px; height: "+h+"px; left: "+l+"; top: "+t+"; z-index: 1002'></div>");
+        //            overlay.addClass(opts.overlayClass);
+        //            this.element.append(overlay);
+        //        }
+        if (this.options.spinnerOnAjax) {
+            var spinner = $("<div class='ui-dialog-spinner' style='display: block; position: absolute; width: " + w + "px; height: " + h + "px; left: " + l + "; top: " + t + "; z-index: 1003'></div>");
             spinner.addClass(this.uiDialogExtClasses.spinner);
             this.element.append(spinner);
         }
     },
-    
-    
+
+
     /**
-     * Fetch the contents of the dialog via ajax
-     * ajaxArgs are the very same arguments you would use on $.ajax.
-     * Actually I call $.ajax(ajaxArgs)
-     */
+   * Fetch the contents of the dialog via ajax
+   * ajaxArgs are the very same arguments you would use on $.ajax.
+   * Actually I call $.ajax(ajaxArgs)
+   */
     ajax: function(ajaxArgs) {
         var content = $(this.element)
-        
+
         content.dialog('loading');
-        var ajaxResponse;
-        
-        var origSuccess = ajaxArgs.done ? ajaxArgs.done : null;
-        ajaxArgs.success = function(r) { ajaxResponse = r; content.dialog('content', r); }
-        
-        if(!ajaxArgs.context || ajaxArgs.context == null)
-            ajaxArgs.context = $(this.element);
-        
+
+        var origSuccess = ajaxArgs.success ? ajaxArgs.success : null;
+        var origError = ajaxArgs.error ? ajaxArgs.error : null;
+
+        ajaxArgs.success = function(r) {
+            try{
+                $.parseJSON(r);
+            } catch (ex) {
+                // Not json, just set it as html ;)
+                content.dialog('content', r);
+            }
+            if(origSuccess)
+                origSuccess(r);
+        }
+
+        ajaxArgs.error = function(r) {
+            try{
+                if(typeof(r) == 'object') {
+                    content.dialog('content', r.responseText);
+                } else {
+                    var json = $.parseJSON(r);
+                    content.dialog('content', json.responseText);
+                }
+            } catch (ex) {
+                if(typeof(r) !== object)
+                    content.dialog('content', r);
+            }
+            if(origError)
+                origError(r);
+        }
+
         $.ajax(ajaxArgs);
-        
-        if(origSuccess)
-            origSuccess(r);
     }
 });
