@@ -4,7 +4,7 @@
  * 1. jDialog will reposition itself when user scrolls over the page
  *
  * 2. Change the contents of the dialog easily
- * $(selector).dialog('setContents', newContent) will replace current contents with
+ * $(selector).dialog('content', newContent) will replace current contents with
  * the new contents
  *
  * 3. Display a loading spinner easily
