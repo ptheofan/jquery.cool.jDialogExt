@@ -26,6 +26,9 @@ $.fn.extend($.ui.dialog.prototype, {
         spinner: 'ui-dialog-spinner'
     },
 
+    /**
+     * Constructor
+     */
     _init: function() {
         this._parentInit();
         this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
@@ -35,6 +38,10 @@ $.fn.extend($.ui.dialog.prototype, {
         if (typeof(this.options.spinnerOnAjax) == 'undefined') this.options.spinnerOnAjax = true;
     },
 
+    /**
+     * Position the dialog on screen
+     * Callback function for a few events -- see _init function for details
+     */
     repositionDlg: function(evt) {
         // Get a reference to the dialog div (ui-dialog)
         var dlg = evt.data;
@@ -78,10 +85,10 @@ $.fn.extend($.ui.dialog.prototype, {
 
 
     /**
-   * Modify the contents of jDialog post initialization
-   * how to:
-   *  $(htmlEntityUsedtoCreateThedialog).dialog('content', htmlOrJQueryObject)
-   */
+     * Modify the contents of jDialog post initialization
+     * how to:
+     *  $(htmlEntityUsedtoCreateThedialog).dialog('content', htmlOrJQueryObject)
+     */
     content: function(content) {
         // Replace current content (dialog.element.html) with new content
         $(this.element).html(content);
@@ -90,13 +97,6 @@ $.fn.extend($.ui.dialog.prototype, {
         var title = $(content).attr('title');
         if (typeof title !== 'undefined' && title !== false) this.uiDialogTitlebar.children('.ui-dialog-title').html(title);
 
-
-        // Unfortunatelly _setSize nor dialog('resize') will properly set
-        // min-width. Thus we do it manually. A little TODO here is that
-        // in jDialog minWidth/minHeight specify outter size (uiDialog).
-        // Apply correction to set minWidth/minHeight of dialog.element
-        // to the remaining size so outter size is correct. At the moment
-        // we set content to minWidth/minHeight
         var w = $(content).innerWidth();
         var h = $(content).innerHeight();
 
@@ -109,10 +109,10 @@ $.fn.extend($.ui.dialog.prototype, {
     },
 
     /**
-   * Modify the title of the jDialog post initialization
-   * how to:
-   *  $(htmlEntityUsedtoCreateThedialog).dialog('title', htmlOrJQueryObject)
-   */
+     * Modify the title of the jDialog post initialization
+     * how to:
+     *  $(htmlEntityUsedtoCreateThedialog).dialog('title', htmlOrJQueryObject)
+     */
     title: function(title) {
         $(this.uiDialogTitlebar).children('.ui-dialog-title').html(title);
     },
@@ -140,7 +140,7 @@ $.fn.extend($.ui.dialog.prototype, {
         if(h < this.options.minWidth) h = this.options.minHeight;
         if(h < this.options.width) h = this.options.height;
 
-        opts = $.extend({}, {title: 'Loading', spinnerClass: 'ui-dialog-spinner'}, opts);
+        opts = $.extend({}, {title: 'Loading', spinnerClass: this.uiDialogExtClasses.spinner}, opts);
 
         if (this.options.spinnerOnAjax) {
             var spinner = $("<div title='Loading...'><div class='" + opts.spinnerClass + "' style='min-width: " + w + "px; min-height: " + h + "px;'></div></div>");
@@ -150,10 +150,10 @@ $.fn.extend($.ui.dialog.prototype, {
 
 
     /**
-   * Fetch the contents of the dialog via ajax
-   * ajaxArgs are the very same arguments you would use on $.ajax.
-   * Actually I call $.ajax(ajaxArgs)
-   */
+     * Fetch the contents of the dialog via ajax
+     * ajaxArgs are the very same arguments you would use on $.ajax.
+     * Actually I call $.ajax(ajaxArgs)
+     */
     ajax: function(ajaxArgs) {
         var content = $(this.element)
 
@@ -162,6 +162,7 @@ $.fn.extend($.ui.dialog.prototype, {
         var origSuccess = ajaxArgs.success ? ajaxArgs.success : null;
         var origError = ajaxArgs.error ? ajaxArgs.error : null;
 
+        // Register our own function for success - we call user supplied function in the end
         ajaxArgs.success = function(r) {
             try{
                 $.parseJSON(r);
@@ -173,6 +174,7 @@ $.fn.extend($.ui.dialog.prototype, {
                 origSuccess(r);
         }
 
+        // Register our own function for error - we call user supplied function in the end
         ajaxArgs.error = function(r) {
             try{
                 if(typeof(r) == 'object') {
