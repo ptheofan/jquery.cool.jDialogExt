@@ -3,9 +3,10 @@
         <link href="/css/jquery-ui-1.8.17.custom.css" type="text/css" rel="Stylesheet" />
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="/jquery-ui-source/ui/jquery.ui.dialog.js"></script>
         
         <script type="text/javascript" src="/jdialog-extention.js"></script>
-        <script type="text/javascript" src="/jquery.blockUI.js"></script>
     </head>
     <body>
         <style type="text/css">
@@ -14,8 +15,38 @@
             }
         </style>
         <div id="runDialog">Launch Dialog</div>
+		<div id="runDialog2">Test Positioning</div>
+		<div id="runDialog3">doNotFollowWindow = true</div>
+		
         <script type="text/javascript">
             $(function(){
+				$("#runDialog3").button().click(function() {
+					var dlg = $('<div><input type="radio"/> whatever 1<input type="radio"/>whateve 2</div>').dialog({
+						autoShow: true,
+						title: 'Whatever',
+						modal: true,
+						resizable: false,
+						draggable: false,
+						width: 'auto',
+						height: 'auto',
+						doNotFollowWindow: true,
+						close: function(event) { $(this).dialog('widget').remove(); }
+					});
+				});
+	
+				$("#runDialog2").button().click(function() {
+					var dlg = $('<div><input type="radio"/> whatever 1<input type="radio"/>whateve 2</div>').dialog({
+						autoShow: true,
+						title: 'Whatever',
+						modal: true,
+						resizable: false,
+						draggable: false,
+						width: 'auto',
+						height: 'auto',
+						close: function(event) { $(this).dialog('widget').remove(); }
+					});
+				});
+				
                 $("#runDialog").button().click(function(){
                     var dlg = $('<div>').dialog({
                         autoShow: true,

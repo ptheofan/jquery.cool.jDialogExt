@@ -13,6 +13,9 @@
  * 4. Populate the dialog via ajax easily
  * $(selector).dialog('ajax', ajaxArgs);
  *
+ * 5. options.doNotFollowWindow
+ * Setting this to true will result in the dialog not following the window when it resizes/scrolls
+ *
  * FYI: Setting width/height to auto when creating the jDialog will automatically
  * handle dialog resize as per CSS standards
  *
@@ -32,8 +35,10 @@ $.fn.extend($.ui.dialog.prototype, {
     _init: function() {
         this._parentInit();
         this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
-        $(window).scroll($(this.uiDialog), this.repositionDlg);
-        $(window).resize($(this.uiDialog), this.repositionDlg);
+		if(typeof(this.options.doNotFollowWindow) === 'undefined' || this.options.doNotFollowWindow === false) {
+        	$(window).scroll($(this.uiDialog), this.repositionDlg);
+        	$(window).resize($(this.uiDialog), this.repositionDlg);
+		}
 
         if (typeof(this.options.spinnerOnAjax) == 'undefined') this.options.spinnerOnAjax = true;
     },
