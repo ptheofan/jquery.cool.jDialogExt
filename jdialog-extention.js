@@ -35,7 +35,8 @@ $.fn.extend($.ui.dialog.prototype, {
     _init: function() {
         this._parentInit();
         this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
-		if(typeof(this.options.doNotFollowWindow) === 'undefined' || this.options.doNotFollowWindow === false) {
+
+		if(typeof(this.options.doNotFollowWindow) === 'undefined' || this.options.doNotFollowWindow === false) {	
         	$(window).scroll($(this.uiDialog), this.repositionDlg);
         	$(window).resize($(this.uiDialog), this.repositionDlg);
 		}
@@ -49,7 +50,7 @@ $.fn.extend($.ui.dialog.prototype, {
      */
     repositionDlg: function(evt) {
         // Get a reference to the dialog div (ui-dialog)
-        var dlg = evt.data;
+        var dlg = evt.data ? evt.data : this.uiDialog;
 
         // Compute top/left coords of the dialog
         var top = (($(window).height() - dlg.height()) / 2) + $(window).scrollTop();
