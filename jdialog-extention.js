@@ -34,12 +34,17 @@ $.fn.extend($.ui.dialog.prototype, {
      */
     _init: function() {
         this._parentInit();
+        
+        // Replace jDialog position.using function with our own
+        // FIX: 'Causes trouble to prerendered jDialogs from Yii
+	this.options.position.using = this.repositionDlg()
+
         this.element.bind('DOMSubtreeModified', $(this.uiDialog), this.repositionDlg);
 
-		if(typeof(this.options.doNotFollowWindow) === 'undefined' || this.options.doNotFollowWindow === false) {	
+	if(typeof(this.options.doNotFollowWindow) === 'undefined' || this.options.doNotFollowWindow === false) {	
         	$(window).scroll($(this.uiDialog), this.repositionDlg);
         	$(window).resize($(this.uiDialog), this.repositionDlg);
-		}
+	}
 
         if (typeof(this.options.spinnerOnAjax) == 'undefined') this.options.spinnerOnAjax = true;
     },
