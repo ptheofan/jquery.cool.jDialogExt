@@ -6,7 +6,7 @@
 
         <script type="text/javascript" src="/jquery-ui-source/ui/jquery.ui.dialog.js"></script>
         
-        <script type="text/javascript" src="/jdialog-extention.js"></script>
+        <script type="text/javascript" src="/jquery.cool.jDialogExt.js"></script>
     </head>
     <body>
         <style type="text/css">
